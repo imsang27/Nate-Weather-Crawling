@@ -98,13 +98,7 @@ while True:
             try:
                 timestamp_key = get_10min_aligned_key()
                 ref = db.reference(f"/weather/{COMBINED_KEY}")
-                ref.child(timestamp_key).set({
-                    "온도": data["온도"],
-                    "습도": data["습도"],
-                    "강수": data["강수"],
-                    "풍향": data["풍향"],
-                    "풍속": data["풍속"]
-                })
+                ref.child(timestamp_key).set(data)
                 print(f"✅ Firebase 저장 성공: {timestamp_key}")
             except Exception as e:
                 print("❌ Firebase 저장 실패:", e)
