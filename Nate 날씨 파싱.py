@@ -50,6 +50,7 @@ def fetch_weather():
         res.encoding = "euc-kr"
         soup = BeautifulSoup(res.text, "html.parser")
 
+        # 필요한 요소 선택
         temp_el = soup.select_one(
             "#contentsWraper > div.weather_main_today_wrap > div.weather_today > div.today_wrap > div > div.right_today > div.temperature > p.celsius"
         )
@@ -63,15 +64,24 @@ def fetch_weather():
             "#contentsWraper > div.weather_main_today_wrap > div.weather_today > div.today_wrap > div > div.right_today > div.hrw_area > p.wind > em"
         )
 
+        # 요소가 다 존재하는지 확인
         if not all([temp_el, humid_el, rain_el, wind_el]):
             print("❌ 일부 데이터 태그를 찾을 수 없습니다.")
             return None
+
+        # 풍향과 풍속 분리
+        wind_text = wind_el.get_text(strip=True)
+        try:
+            wind_dir, wind_speed = wind_text.split(maxsplit=1)  # "북서", "2.5 m/s"
+        except ValueError:
+            wind_dir, wind_speed = wind_text, ""
 
         return {
             "temperature": temp_el.get_text(strip=True),
             "humidity": humid_el.get_text(strip=True),
             "precipitation": rain_el.get_text(strip=True),
-            "wind": wind_el.get_text(strip=True)
+            "풍향": wind_dir,
+            "풍속": wind_speed
         }
 
     except Exception as e:
