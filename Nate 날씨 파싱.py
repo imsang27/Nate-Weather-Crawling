@@ -25,6 +25,7 @@ try:
     print("✅ Firebase 초기화 성공")
 except Exception as e:
     print("❌ Firebase 초기화 실패:", e)
+    exit(1)
 
 # 정확히 10분 단위 시각에 해당하는 키 생성
 def get_10min_aligned_key():
@@ -33,7 +34,7 @@ def get_10min_aligned_key():
     aligned_time = now.replace(minute=aligned_minute, second=0, microsecond=0)
     return aligned_time.strftime("%Y-%m-%d %H:%M:%S")
 
-# 현재 시각이 정확히 10분 단위 인지 확인
+# 현재 시각이 정확히 10분 단위인지 확인
 def is_time_to_crawl():
     now = datetime.now()
     return now.minute % 10 == 0 and now.second == 0
@@ -72,14 +73,14 @@ def fetch_weather():
         # 풍향과 풍속 분리
         wind_text = wind_el.get_text(strip=True)
         try:
-            wind_dir, wind_speed = wind_text.split(maxsplit=1)  # "북서", "2.5 m/s"
+            wind_dir, wind_speed = wind_text.split(maxsplit=1)
         except ValueError:
             wind_dir, wind_speed = wind_text, ""
 
         return {
-            "temperature": temp_el.get_text(strip=True),
-            "humidity": humid_el.get_text(strip=True),
-            "precipitation": rain_el.get_text(strip=True),
+            "온도": temp_el.get_text(strip=True),
+            "습도": humid_el.get_text(strip=True),
+            "강수": rain_el.get_text(strip=True),
             "풍향": wind_dir,
             "풍속": wind_speed
         }
@@ -98,9 +99,11 @@ while True:
                 timestamp_key = get_10min_aligned_key()
                 ref = db.reference(f"/weather/{COMBINED_KEY}")
                 ref.child(timestamp_key).set({
-                    "온도": data["temperature"],
-                    "습도": data["humidity"],
-                    "강수": data["precipitation"]
+                    "온도": data["온도"],
+                    "습도": data["습도"],
+                    "강수": data["강수"],
+                    "풍향": data["풍향"],
+                    "풍속": data["풍속"]
                 })
                 print(f"✅ Firebase 저장 성공: {timestamp_key}")
             except Exception as e:
@@ -108,8 +111,6 @@ while True:
         else:
             print("⛔ 유효한 데이터를 가져오지 못했습니다.")
 
-        # 중복 저장 방지: 약 55초 쉬기
         time.sleep(55)
     else:
-        # 1초 간격으로 폴링
         time.sleep(1)
