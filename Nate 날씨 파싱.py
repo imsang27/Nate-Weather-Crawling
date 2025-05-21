@@ -59,15 +59,19 @@ def fetch_weather():
         rain_el = soup.select_one(
             "#contentsWraper > div.weather_main_today_wrap > div.weather_today > div.today_wrap > div > div.right_today > div.hrw_area > p.rainfall > em"
         )
+        wind_el = soup.select_one(
+            "#contentsWraper > div.weather_main_today_wrap > div.weather_today > div.today_wrap > div > div.right_today > div.hrw_area > p.wind > em"
+        )
 
-        if not temp_el or not humid_el or not rain_el:
+        if not all([temp_el, humid_el, rain_el, wind_el]):
             print("❌ 일부 데이터 태그를 찾을 수 없습니다.")
             return None
 
         return {
             "temperature": temp_el.get_text(strip=True),
             "humidity": humid_el.get_text(strip=True),
-            "precipitation": rain_el.get_text(strip=True)
+            "precipitation": rain_el.get_text(strip=True),
+            "wind": wind_el.get_text(strip=True)
         }
 
     except Exception as e:
