@@ -7,11 +7,9 @@ import os
 import time
 from datetime import datetime
 
-# ───── 상수 정의 ─────
 AREA_NAME = "cheonan_asan"
 AREA_CODE = "11C20302"
 COMBINED_KEY = f"{AREA_NAME}({AREA_CODE})"
-# ────────────────────
 
 # .env에서 Firebase URL 로드
 load_dotenv()
@@ -27,7 +25,6 @@ try:
     print("✅ Firebase 초기화 성공")
 except Exception as e:
     print("❌ Firebase 초기화 실패:", e)
-    exit(1)
 
 # 정확히 10분 단위 시각에 해당하는 키 생성
 def get_10min_aligned_key():
