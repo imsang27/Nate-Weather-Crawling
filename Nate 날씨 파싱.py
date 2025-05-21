@@ -73,7 +73,7 @@ def fetch_weather():
         # 풍향과 풍속 분리
         wind_text = wind_el.get_text(strip=True)
         try:
-            wind_dir, wind_speed = wind_text.split(maxsplit=1)
+            wind_dir, wind_speed = wind_text.split(maxsplit=1)  # "북서", "2.5 m/s"
         except ValueError:
             wind_dir, wind_speed = wind_text, ""
 
@@ -105,6 +105,8 @@ while True:
         else:
             print("⛔ 유효한 데이터를 가져오지 못했습니다.")
 
+        # 중복 저장 방지: 약 55초 쉬기
         time.sleep(55)
     else:
+        # 1초 간격으로 폴링
         time.sleep(1)
