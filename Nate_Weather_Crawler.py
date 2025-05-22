@@ -29,6 +29,10 @@ app = Flask(__name__)
 @app.route("/")
 def ping():
     return "OK"
+  
+@app.route("/healthz")
+def healthz():
+    return "OK", 200
 
 # ───────────── 크롤링 로직 ─────────────
 def get_10min_aligned_key():
