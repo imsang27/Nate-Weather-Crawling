@@ -102,4 +102,5 @@ if __name__ == "__main__":
 
     # Flask는 메인 스레드에서 실행해야 Render가 포트 감지 가능
     port = int(os.environ.get("PORT", 10000))
+    print(f"🚀 Starting Flask server on port {port}")
     app.run(host="0.0.0.0", port=port)
