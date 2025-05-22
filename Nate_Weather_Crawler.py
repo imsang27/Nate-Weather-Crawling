@@ -54,9 +54,7 @@ def is_time_to_crawl():
 # ───────────── 날씨 데이터 크롤링 ─────────────
 def fetch_weather():
     url = f"https://news.nate.com/weather?areaCode={AREA_CODE}"
-    headers = {
-        headers={"User-Agent": "Mozilla/5.0"}
-    }
+    headers = {"User-Agent": "Mozilla/5.0"}
 
     try:
         res = requests.get(url, headers=headers)
