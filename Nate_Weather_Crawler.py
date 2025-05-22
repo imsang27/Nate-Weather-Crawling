@@ -9,7 +9,7 @@ from datetime import datetime
 import threading
 from flask import Flask
 
-# ───────────── 설정 ─────────────
+# ───────────── 상수 설정 ─────────────
 AREA_NAME = "cheonan_asan"
 AREA_CODE = "11C20302"
 COMBINED_KEY = f"{AREA_NAME}({AREA_CODE})"
@@ -40,7 +40,7 @@ def ping():
 def healthz():
     return "OK", 200
 
-# ───────────── 시각 유틸 ─────────────
+# ───────────── 크롤링 로직 ─────────────
 def get_10min_aligned_key():
     now = datetime.now()
     aligned_minute = (now.minute // 10) * 10
@@ -53,11 +53,12 @@ def is_time_to_crawl():
 
 # ───────────── 날씨 데이터 크롤링 ─────────────
 def fetch_weather():
-    url = f"https://news.nate.com/weather?areaCode={AREA_CODE}"
-    headers = {"User-Agent": "Mozilla/5.0"}
-
     try:
-        res = requests.get(url, headers=headers)
+        # ───────────── headers 정의 ───────────── 
+        res = requests.get(
+            url = f"https://news.nate.com/weather?areaCode={AREA_CODE}",
+            headers = {"User-Agent": "Mozilla/5.0"}
+        )
         res.encoding = "euc-kr"
         soup = BeautifulSoup(res.text, "html.parser")
 
