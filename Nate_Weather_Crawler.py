@@ -6,6 +6,8 @@ from dotenv import load_dotenv
 import os
 import time
 from datetime import datetime
+import threading
+import socket
 
 AREA_NAME = "cheonan_asan"
 AREA_CODE = "11C20302"
@@ -88,6 +90,22 @@ def fetch_weather():
     except Exception as e:
         print("❌ 크롤링 중 오류 발생:", e)
         return None
+
+# ─────────────────────────────
+# Render가 꺼지지 않도록 포트 바인딩
+# ─────────────────────────────
+def keep_alive():
+    port = int(os.environ.get("PORT", 10000))
+    s = socket.socket()
+    s.bind(("0.0.0.0", port))
+    s.listen(1)
+    print(f"🟢 Keep-alive socket bound to port {port}")
+    while True:
+        conn, _ = s.accept()
+        conn.close()
+
+# 백그라운드 스레드로 keep-alive 실행
+threading.Thread(target=keep_alive, daemon=True).start()
 
 # 메인 루프
 while True:
