@@ -99,6 +99,7 @@ def fetch_weather():
 
 # ───────────── 크롤링 루프 ─────────────
 def weather_loop():
+    print("🔁 weather_loop 시작됨")
     while True:
         if is_time_to_crawl():
             print(f"🕒 {datetime.now()} - 크롤링 시작")
